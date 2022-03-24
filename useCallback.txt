@@ -1,0 +1,11 @@
+even simpler than useMemo
+
+once again, the reference equality of js is what makes this one important
+
+basically if we have a function on a component and we pass it to a child of said component
+react won't realise that it's the same function and will keep using more memory to recreate this function
+
+so it only has one use case
+  on functions that we pass to child components
+    doesn't matter if it's a "heavy" or whatever
+    it's just the act of recreating the same function that makes us useCallback
