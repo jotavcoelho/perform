@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-
+import { List, AutoSizer, AutoSizerProps, ListRowRenderer } from "react-virtualized";
+// this is incredible for performance, gotta use this on projects
 import { ProductItem } from "./ProductItem";
 
 interface SearchResultsProps {
@@ -40,10 +40,33 @@ export function SearchResults ({ results, onAddToWishList, totalPrice }: SearchR
    * inefficient
    */
 
+  const rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    return (
+      <div key={key} style={style}>
+        <ProductItem 
+          product={results[index]} 
+          onAddToWishList={onAddToWishList}
+        />
+      </div>
+    )
+  }
+
   return (
     <div>
       <h2>{totalPrice}</h2>
-      {results.map(product => {
+      <AutoSizer>
+        {({ height, width }) => ( // for these to work we have to set the whole app's height and width, it's not gonna be worth the time in this case, since this is just a "showcase"
+          <List 
+            height={600}
+            width={1300}
+            rowHeight={25}
+            overscanRowCount={5}
+            rowCount={results.length}
+            rowRenderer={rowRenderer}
+          />
+        )}
+      </AutoSizer>
+      {/* {results.map(product => {
         return (
           <ProductItem 
             key={product.id}
@@ -51,7 +74,7 @@ export function SearchResults ({ results, onAddToWishList, totalPrice }: SearchR
             onAddToWishList={onAddToWishList}
           />
         );
-      })}
+      })} */}
     </div>
   )
 }
