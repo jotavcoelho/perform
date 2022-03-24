@@ -1,0 +1,61 @@
+prevents the first step of the React rendering flow from happening
+IF NO PROPS WERE CHANGED of the component in question
+  and consequently, prevents the component from being affected by the rendering flow at all 
+
+React Rendering Flow
+	1. Generate a new version of the component that will be rendered;
+	2. Compare this new one with the previous version already on the page;
+	3. If there are any changes, React "renders" the new version on screen;
+
+before applying it on ProductItem, here are the rendering data:
+  "camisa 1" being searched and still on the input
+  the situation is just to delete the last character on input 4 times WITHOUT SUBMITTING
+  profiling the above we have:
+    SearchResults (0.5ms of 4.1ms)
+      4.1ms is the total time of the full render 
+      0.5ms is the time it took for the SearchResults component to render
+
+it always uses shallow compare
+which is not good when we deal with props that we can't effectively compare with "==="
+such as, in our case, objects
+whenever we're in such a situation, we have to use use its second param
+which is the conditional WE MAKE to tell memo that the component is still the same
+it overrides the standard shallow compare and should return true if the component is still the same
+
+AND WE HAVE TO BE CAREFUL to create a conditional that's not demanding on processing
+if we use a complex one, it might be even worse than lettin React work normally
+
+in this case, we're using Object.is only because the objects are small
+  if they were complex or large, it would hinder performance 
+
+now here is the rendering data AFTER applying memo
+  SearchResults (0.9ms of 1ms)
+
+here we can see that, though the time for SearchResults itself to render was
+almost double, the time for the whole render to happen was four times smaller
+
+we can also see that the product items will NOT be rendered again after using memo
+
+I've done this multiple times, with the only thing changing being the use of memo
+and results are consistently the same as what's written above
+
+the following situations are the most recommended for using memo:
+  I. Pure Functional Components
+    these "pure" are stuff that, given the same parameters, will ALWAYS have the same return
+    a good example of not pure functions are ones that depend on date or on external apis
+    Pure Functional Components are generally simple ones we separate from a page just for compartimentalization
+  II. Components that render too often
+    with the devtools extention we can check the box that puts a border around every component that's being renderized 
+    and with it, we can see which components are being renderized too often, things we should be using memo on
+  III. Components that re-renders with the same props 
+    self explanatory
+    even better if the component is also re-rendering a lot
+    however, for things that are re-rendering, though looking the same, but with different props, memo won't do a thing
+    which is kinda obvious but it doesn't hurt to have it written down
+  IV. Components that are of Medium to Large size
+    I'm not sure I got this completely, like, on item I the instructor says that thing I wrote on its last line
+    then he says that it's not worth it to use memo on small stuff
+    though I kinda get it, it's not enough for me to explain it, I'll revise this
+    
+
+  
