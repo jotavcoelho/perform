@@ -1,0 +1,21 @@
+basically does one thing
+
+prevents something that uses a lot of processing power to be re done without it actually being needed
+
+such as complex mathematical operations that don't necessarily change often
+
+but we don't have any complex calculation to do, so I tried to benchmark the differences but to no result
+
+useMemo has a dependency array that works similarly to the one in useEffect
+  we put there the stuff that the operation needs and it'll only be recalculated if what's in the array changes
+
+and also, we can use useMemo when we have whatever value that is passed as a prop to child components
+  when this happens, every time said component re-renders, the value will occupy another space in memory
+  but useMemo can stop that
+
+situations
+  1. Heavy or complex operations
+  2. Reference equality
+    js checks whether two things occupy the same space in memory
+    so it doesn't matter if the stuff we're passing through props has the same value at every rendering cycle, React will use more memory to store said value 
+    useMemo prevents that
