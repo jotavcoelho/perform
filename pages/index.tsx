@@ -29,7 +29,7 @@ const Home: NextPage = () => {
       currency: 'BRL'
     })
 
-    const products = data.map(product => {
+    const products = data.map((product: { id: any; title: any; price: number | bigint; }) => {
       return {
         id: product.id,
         title: product.title,
@@ -41,7 +41,7 @@ const Home: NextPage = () => {
     // which is the best place to do it, since we know that it's not being
     // formatted again with no reason when rendering
 
-    const totalPrice = data.reduce((total, product) => {
+    const totalPrice = data.reduce((total: any, product: { price: any; }) => {
       return total + product.price;
     }, 0)
     // same with the totalPrice calculation, no need to do it while rendering
